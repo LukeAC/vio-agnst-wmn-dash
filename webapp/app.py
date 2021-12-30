@@ -4,7 +4,11 @@
 
 from flask import Flask, render_template
 from dash import Dash, html, dcc
-from data_processing import survey_year_plot
+
+from data_processing import missing_values_plot, \
+                            question_response_plot, \
+                            survey_year_plot, \
+                            quesvalue_scatter_plot
 
 import plotly.graph_objects as go
 import plotly.express as px
@@ -39,9 +43,24 @@ app.layout = html.Div(id = 'parent', children = [
         ),
  
     dcc.Graph(
-            id = 'line_plot', 
-            figure = stock_prices()
-        )    
+            id = 'missing_values_plot', 
+            figure = missing_values_plot()
+        ),
+    
+    dcc.Graph(
+         id = 'question_response_plot', 
+        figure = question_response_plot()
+    ),
+
+    dcc.Graph(
+         id = 'survey_year_plot', 
+        figure = survey_year_plot()
+    ),
+
+    dcc.Graph(
+         id = 'quesvalue_scatter_plot', 
+        figure = quesvalue_scatter_plot()
+    )
     ]
 )
 
