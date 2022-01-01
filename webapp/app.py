@@ -6,9 +6,9 @@ from flask import Flask, render_template
 from dash import Dash, html, dcc
 from dash.dependencies import Input, Output
 
-from data_processing import get_unique_countries, \
+from data_processing import get_countries_in_continent_code, \
+                            get_continent_with_country_code, \
                             get_demographics, \
-                            get_unique_continents, \
                             missing_values_plot, \
                             question_response_plot, \
                             survey_year_plot, \
@@ -45,13 +45,13 @@ app.layout = html.Div(id = 'parent', children = [
     
     dcc.Dropdown(
         id = 'country-dd',
-        options = get_unique_countries(),
+        options = get_countries_in_continent_code(),
         value = 'All'
         ),
     
     dcc.Dropdown(
         id = 'continent-dd',
-        options = get_unique_continents(),
+        options = get_continent_with_country_code(),
         value = 'All'
         ),
 
@@ -84,6 +84,19 @@ app.layout = html.Div(id = 'parent', children = [
 )
 
 
+@app.callback(
+    Output('country-dd', 'options'),
+    Input('continent-dd', 'value'))
+def update_country_dd_options(continent_code):
+    return get_countries_in_continent_code(continent_code)
+
+@app.callback(
+    Output('continent-dd', 'options'),
+    Input('country-dd', 'value'))
+def update_continent_dd_options(country_code):
+    return get_continent_with_country_code(country_code)
+
+
 @app.callback(Output(component_id='question_response_plot', component_property= 'figure'),
               [Input(component_id='continent-dd', component_property= 'value'),
               Input(component_id='country-dd', component_property= 'value'),
@@ -111,4 +124,3 @@ def update_quesvalue_scatter_plot(continent_value, country_value, demographic_va
 
 if __name__ == '__main__':
     app.run_server()
-    
