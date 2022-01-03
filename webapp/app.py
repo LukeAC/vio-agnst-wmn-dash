@@ -5,17 +5,17 @@
 from flask import Flask, render_template
 from dash import Dash, html, dcc
 from dash.dependencies import Input, Output
+import dash_daq as daq
 
-from data_processing import get_countries_in_continent_code, \
-                            get_continent_with_country_code, \
-                            get_demographics, \
-                            missing_values_plot, \
-                            question_response_plot, \
-                            survey_year_plot, \
-                            quesvalue_scatter_plot
+from queries import get_countries_in_continent_code, \
+                    get_continent_with_country_code, \
+                    get_demographics
 
-import plotly.graph_objects as go
-import plotly.express as px
+from plotting import missing_values_plot,\
+                    question_response_plot,\
+                    survey_year_plot,\
+                    ques_gender_scatter_plot
+
 
 app = Dash()   #initialising dash app
 
@@ -76,9 +76,33 @@ app.layout = html.Div(id = 'parent', children = [
         figure = survey_year_plot()
     ),
 
+    html.H2(
+            id = 'dash-header-2', 
+            children = 'Compare Men and Women in Demographic Groups',
+            style = {
+                    'textAlign':'center',
+                    'marginTop':40,
+                    'marginBottom':40
+                }
+        ),
+    
+    daq.ToggleSwitch(
+        id='plot-toggle-switch',
+        label='Scatter plot / Box Plot',
+        value=False
+    ),
+
+    dcc.Slider(
+        id = 'opacity-slider',
+        min=0.1,
+        max=1,
+        step=0.1,
+        value = 1
+        ),
+
     dcc.Graph(
-        id = 'quesvalue_scatter_plot', 
-        figure = quesvalue_scatter_plot()
+        id = 'ques_gender_scatter_plot', 
+        figure = ques_gender_scatter_plot(),
     )
     ]
 )
@@ -110,15 +134,18 @@ def update_question_response_plot(continent_value, country_value, question_value
     return fig  
 
 
-@app.callback(Output(component_id='quesvalue_scatter_plot', component_property= 'figure'),
+@app.callback(Output(component_id='ques_gender_scatter_plot', component_property= 'figure'),
              [Input(component_id='continent-dd', component_property= 'value'),
               Input(component_id='country-dd', component_property= 'value'),
-              Input(component_id='demographic-dd', component_property= 'value')])
-def update_quesvalue_scatter_plot(continent_value, country_value, demographic_value):
+              Input(component_id='demographic-dd', component_property= 'value'),
+              Input(component_id='opacity-slider', component_property= 'value'),
+              Input(component_id='plot-toggle-switch', component_property='value')])
+def update_ques_gender_scatter_plot(continent_value, country_value, demographic_value,
+opacity, plot_toggle):
     print(continent_value)
     print(country_value)
     print(demographic_value)
-    fig = quesvalue_scatter_plot(continent_value, country_value, demographic_value)
+    fig = ques_gender_scatter_plot(continent_value, country_value, demographic_value, opacity, plot_toggle)
 
     return fig 
 
