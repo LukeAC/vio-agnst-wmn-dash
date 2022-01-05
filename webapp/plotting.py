@@ -5,6 +5,10 @@ import plotly.graph_objects as go
 def missing_values_plot():
     missing_vals = dp.raw_data.loc[dp.raw_data['Value'].isna()]
     figure = px.bar(missing_vals.Country.value_counts(), orientation='h')
+    figure.update_layout(showlegend=False, font=dict(size=9))
+    figure.update_xaxes(title='Number of missing values')
+    figure.update_yaxes(title='')
+    
     return figure
 
 
@@ -23,7 +27,8 @@ def survey_year_plot():
         margin=dict(l=20, r=30, t=20, b=20),
         legend=dict(
             title="Survey conducted in...",
-            orientation="h"
+            orientation="h",
+            font=dict(size=9)
         )
     )
 
@@ -32,6 +37,7 @@ def survey_year_plot():
 
 def question_response_plot(continent_code='All', country_code='All', question=1):
     """
+    A husband is justified in hitting or beating his wife
         1 = '... for at least one specific reason'
         2 = '... if she argues with him'
         3 = '... if she burns the food'
@@ -72,25 +78,31 @@ def question_response_plot(continent_code='All', country_code='All', question=1)
         hover_name="Country",
         color="Value",
         facet_col="Question",
-        facet_col_wrap=2,
-        width=900, 
-        height=800
+        facet_col_wrap=1,
     )
 
     agreement_across_countries.update_layout(
-        margin=dict(l=10, r=10, t=20, b=10),
         legend=dict(
-        orientation="h",
-        yanchor="bottom",
-        y=1.02,
-        xanchor="right",
-        x=1)
+            title="Percent agreement",
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+            font=dict(size=9)
+        )
+    )
+
+    agreement_across_countries.for_each_annotation(
+        lambda a: a.update(
+            text= 'A husband is justified in hitting or beating his wife' + a.text.split("=")[-1]
+        )
     )
 
     return agreement_across_countries
 
-def ques_gender_scatter_plot(continent_code='All', country_code='All', by_demographic='Education', 
-opacity=1, plot_toggle=False):
+def ques_gender_scatter_plot(continent_code='All', country_code='All', 
+by_demographic='Education', plot_toggle=False):
 
     processed_data = dp.country_survey_data
     if continent_code != 'All':
@@ -103,10 +115,9 @@ opacity=1, plot_toggle=False):
         figure = px.scatter(
             processed_data.loc[processed_data['Demographics Question'] == by_demographic], 
             y="Question",
-            x="Value", 
+            x="Value",
             color="Gender",
             facet_col="Demographics Response",
-            opacity=opacity
             )
     if plot_toggle is True:
         figure = px.box(
@@ -114,7 +125,11 @@ opacity=1, plot_toggle=False):
             y="Question",
             x="Value", 
             color="Gender",
-            facet_col="Demographics Response",
+            facet_col="Demographics Response"
             )
+    
+    figure.update_xaxes(title='Percent Agreement')
+    figure.for_each_annotation(lambda a: a.update(text=by_demographic + ' = ' + a.text.split("=")[-1]))
+    figure.update_layout(font=dict(size=9))
 
     return figure
