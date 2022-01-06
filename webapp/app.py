@@ -42,6 +42,15 @@ def update_country_dd_options(continent_code):
 def update_continent_dd_options(country_code):
     return get_continent_with_country_code(country_code)
 
+@app.callback(Output(component_id='missing_values_plot', component_property='figure'),
+              [Input(component_id='continent-dd', component_property= 'value'),
+              Input(component_id='country-dd', component_property= 'value')])
+def update_missing_values_plot(continent_value, country_value):
+    print(continent_value)
+    print(country_value)  
+    fig = missing_values_plot(continent_value, country_value)
+
+    return fig
 
 @app.callback(Output(component_id='question_response_plot', component_property= 'figure'),
               [Input(component_id='continent-dd', component_property= 'value'),

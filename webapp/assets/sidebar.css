@@ -1,0 +1,14 @@
+.app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 20%;
+    padding: 0px 10px;
+    font-size: small;
+    background-color: #f8f9fa
+}
+
+.app-sidebar-dd-label {
+    text-align: left
+}
