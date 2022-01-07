@@ -10,6 +10,8 @@ def load_data():
     raw_data = pd.read_csv('data/violence_data.csv')
     transformed_raw_data = raw_data.copy()
     transformed_raw_data["Survey Year"] = pd.to_datetime(raw_data["Survey Year"]).dt.year
+    transformed_raw_data["Statement"] = raw_data["Question"]
+    transformed_raw_data.drop(columns=["Statement"])
 
     # clean raw country codes to facilitate iso alpha code lookup
     country_clean_dict = {
@@ -33,6 +35,18 @@ def load_data():
     transformed_raw_data['country_code'] = transformed_raw_data['clean_country'].copy().map(country_name_to_country_alpha3)
     transformed_raw_data['continent_code'] = alpha2_country_codes.copy().map(country_alpha2_to_continent_code)
     transformed_raw_data['Continent'] = transformed_raw_data['continent_code'].copy().map(continent_names)
+
+    # Add Question IDs
+    statement_ids = {
+        '... for at least one specific reason': 1,
+        '... if she argues with him': 2,
+        '... if she burns the food': 3,
+        '... if she goes out without telling him': 4,
+        '... if she refuses to have sex with him': 5,
+        '... if she neglects the children': 6
+    }
+    
+    transformed_raw_data['statement_id'] = transformed_raw_data['Statement'].copy().map(statement_ids)
 
     transformed_raw_data["date_bins"] = np.where(
         transformed_raw_data['Survey Year'] < 2005,

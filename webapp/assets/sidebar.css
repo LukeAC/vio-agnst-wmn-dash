@@ -10,5 +10,10 @@
 }
 
 .app-sidebar-dd-label {
-    text-align: left
+    text-align: left;
+    margin-bottom: 1px
+}
+
+.dropdown {
+    padding-bottom: 10px;
 }
