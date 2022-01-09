@@ -49,13 +49,18 @@ controls = dbc.FormGroup(
             value = 'Education',
             clearable=False,
             className='dropdown'
-        )
+        ),
+
+        dbc.Card([html.H4('Note:', className='card-subtitle'),
+                  dbc.CardBody("The term 'Statement' used in this dashboard is short-form \
+                    for the selected sentence fragment prefaced by the statement: \n \
+                    'A husband is justified in hitting or beating his wife...'")])
     ])
 
 dash_sidebar = html.Div(
     id = 'sidebar',
     children=[
-        html.H2('Parameters', className="app-header"),
+        html.H2('EDA Dashboard for Violence Against Women & Girls Dataset', className="sidebar-header"),
         html.Hr(),
         controls
     ],

@@ -1,0 +1,22 @@
+.card {
+    padding: 5px 0px 7px 0px;
+}
+
+.card-title {
+    font-size: 11pt;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+
+.card-subtitle {
+    font-size: 9pt;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+.card-body{
+    padding: 5px 0px;
+    margin: 0px 5px 3px 5px;    
+}
+

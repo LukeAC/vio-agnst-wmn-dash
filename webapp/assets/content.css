@@ -1,10 +1,31 @@
 .app-content {
-    margin-left: 20%;
-    margin-right: 3%;
-    padding: 20px 10p
+    margin-left: 19%;
+    margin-right: 0%;
+    padding: 2px 2px;
+    background-color: rgb(245, 248, 252);
+    /* background-color: black; */
 }
 
-.app-card {
-    text-align: center;
-    color: #0074D9
+Hr {
+    margin-top: 10px;
+    margin-bottom: 5px
+}
+
+.row {
+    margin: 0px 5px;
+    padding: 0px 5px;
+}
+.col-12 {
+    padding: 3px 0px;
+    margin: 0px 0px;
+}
+
+.col-8 {
+    padding: 3px 0px;
+    margin: 0px 0px;
+}
+
+.col-4 {
+    padding: 3px 0px;
+    margin: 0px 0px;
 }

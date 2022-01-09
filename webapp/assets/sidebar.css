@@ -3,10 +3,11 @@
     top: 0;
     left: 0;
     bottom: 0;
+    right: 0;
     width: 20%;
-    padding: 0px 10px;
+    padding: 0px 6px;
     font-size: small;
-    background-color: #f8f9fa
+    background-color: #eff4f8
 }
 
 .app-sidebar-dd-label {

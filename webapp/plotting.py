@@ -2,7 +2,7 @@ import queries as q
 import plotly.express as px
 import plotly.graph_objects as go
 
-margins = dict(l=5, b=10, r=10)
+margins = dict(l=1, b=10, r=1, t=7)
 
 def missing_values_plot(continent_code='All', country_code='All'):
     filtered_data = q.geo_filter(continent_code=continent_code, country_code=country_code)
@@ -11,15 +11,14 @@ def missing_values_plot(continent_code='All', country_code='All'):
 
     figure = px.bar(
         missing_vals.Country.value_counts()[:11],
-        title='Missing values in source data',
         orientation='h',
-        height=400
+        height=300,
+        width=285
     )
     figure.update_layout(
         showlegend=False, 
         font=dict(size=9),
         margin=margins,
-        title=dict(y=0.85)
     )
     figure.update_xaxes(title='Number of missing values', nticks=10)
     figure.update_yaxes(title='')
@@ -28,28 +27,27 @@ def missing_values_plot(continent_code='All', country_code='All'):
 
 
 def survey_year_plot(continent_code='All', country_code='All'):
-    filtered_data = q.geo_filter(continent_code=continent_code, country_code=country_code) # no filter applied
+    filtered_data = q.geo_filter(continent_code=continent_code, country_code=country_code)
     figure = px.choropleth(
         filtered_data, 
         locations="country_code",
         hover_name="Country",
         hover_data=["Survey Year"],
         color = "date_bins",
-        title='Survey Year',
-        category_orders={"date_bins": ["2000 - 2004", "2005 - 2009", "2010 - 2014", "2015 - 2018"]}
+        category_orders={"date_bins": ["2000 - 2004", "2005 - 2009", "2010 - 2014", "2015 - 2018"]},
+        height=300
     )
 
     figure.update_layout(
-        margin = dict(l=5, b=10, r=10, t=30),
+        margin = margins,
         font=dict(size=9),
-        title=dict(yref='paper', yanchor='bottom', y=0.9),
         legend=dict(
             title="Survey conducted in...",
             bgcolor = 'rgba(255,255,255,0.9)',
             yanchor="top",
-            y=0.8,
+            y=0.97,
             xanchor="left",
-            x=0.01
+            x=0.07
         )
     )
 
@@ -79,9 +77,7 @@ def statement_response_plot(continent_code='All', country_code='All', statement_
         locations="country_code",
         hover_name="Country",
         color="Value",
-        facet_col="Statement",
-        facet_col_wrap=1,
-        title="Percent of surveyed pop. that agrees with statement averaged over demographic and gender"
+        height=300
     )
 
     agreement_across_countries.update_layout(
@@ -95,53 +91,100 @@ def statement_response_plot(continent_code='All', country_code='All', statement_
         )
     )
 
-    agreement_across_countries.for_each_annotation(
-        lambda a: a.update(
-            text='A husband is justified in hitting or beating his wife' + a.text.split("=")[-1]
-        )
-    )
-
     return agreement_across_countries
 
 def ques_gender_scatter_plot(continent_code='All', country_code='All', 
 by_demographic='Education', plot_toggle=False):
 
     filtered_data = q.geo_filter(continent_code=continent_code, country_code=country_code)
-    
+    opacity = (1/len(filtered_data)) * 2000
+    print(opacity)
     if plot_toggle is False:
         figure = px.scatter(
-            filtered_data.loc[filtered_data['Demographics Question'] == by_demographic], 
+            data_frame=filtered_data.loc[filtered_data['Demographics Question'] == by_demographic], 
             x="Value",
             y="Statement",
             color="Gender",
+            custom_data=['Country'],
             facet_col="Demographics Response",
-            title='Agreement as a function of demographic and gender'
+            opacity=opacity if opacity<=1 else 1,
+            height=400,
             )
+        figure.update_yaxes(title=by_demographic)
     if plot_toggle is True:
         figure = px.box(
             filtered_data.loc[filtered_data['Demographics Question'] == by_demographic],
-            x="Value",  
-            y="Statement",
-            color="Gender",
-            facet_col="Demographics Response",
-            title='Agreement as a function of demographic and gender'
+            y="Value",  
+            x="Demographics Response",
+            color="Statement",
+            facet_col="Gender",
+            height=400,
+            hover_data=['Country'],
             )
     
-    figure.update_xaxes(title='Percent Agreement')
-    figure.for_each_annotation(lambda a: a.update(text=by_demographic + ' = ' + a.text.split("=")[-1]))
-    # figure.add_annotation(text="Absolutely-positioned annotation",
-    #               xref="paper", yref="paper",
-    #               x=0.3, y=0.3, showarrow=False, textangle=-90,
-    #               font=dict(size=9), xshift=-200)
+    #figure.for_each_annotation(lambda a: a.update(text=by_demographic + ' = ' + a.text.split("=")[-1]))
+    figure.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+
+    for axis in figure.layout:
+        if type(figure.layout[axis]) == go.layout.XAxis:
+            figure.layout[axis].title.text = ''
+        if type(figure.layout[axis]) == go.layout.YAxis:
+            figure.layout[axis].title.text = ''
+
+    
+    figure.update_layout(
+        annotations = list(figure.layout.annotations) + 
+        [go.layout.Annotation(
+                x=0.5,
+                y=-0.13,
+                font=dict(
+                    size=12
+                ),
+                showarrow=False,
+                text="Percent Agreement",
+                xref="paper",
+                yref="paper"
+            )
+        ]
+    )
+
     figure.update_layout(
         font=dict(size=9),
-        margin = margins
-        # legend=dict(
-        #     orientation="h",
-        #     yanchor="bottom",
-        #     y=1,
-        #     xanchor="right",
-        #     x=0)
+        margin = dict(l=5, b=10, r=10, t=55)
         )
+    
+    figure.update_traces(
+        hovertemplate="<br>".join([
+            "Value: %{x}",
+            "Country: %{customdata[0]}"
+        ])
+    )
 
     return figure
+
+def data_table(gender, continent_code='All', country_code='All', 
+    by_demographic='Education', statement_id=1):
+    # gender must be 'F' or 'M'
+    
+    filtered_data = q.geo_filter(continent_code=continent_code, country_code=country_code)
+    filtered_data = q.question_filter(filtered_data, statement_id)
+    filtered_data = q.demo_filter(filtered_data, by_demographic)
+    output_dict = {
+        'title': filtered_data['Demographics Question'].unique()[0],
+        'values': filtered_data
+            .loc[filtered_data['Gender']==gender]
+            .groupby(['demo_ordinal', 'Demographics Response'])
+            .mean(['Value']).round(2).reset_index()
+            .loc[:, ['Demographics Response','Value']]
+        }
+
+    columns = [
+        {"name": output_dict['title'], "id": 'Demographics Response'},
+        {"name": 'Avg. % Agreement', "id": 'Value'}
+        ]
+    
+    data = output_dict['values'].to_dict('records')
+
+    return data, columns
+
+    
