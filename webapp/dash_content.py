@@ -100,7 +100,7 @@ row_2 = dbc.Row([
                     daq.ToggleSwitch(
                     id='plot-toggle-switch',
                     label={'label': 'Plot type: Scatter / Box', 'style': {'font-size': "smaller"}},
-                    value=False,
+                    value=True,
                     size=30,
                     style={'margin': '0px', 'padding': '0px'}, # toggle style
                 ), style={'margin': '0px 0px', 'padding': '0px 0px'}) # card body style
