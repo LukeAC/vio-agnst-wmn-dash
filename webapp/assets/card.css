@@ -1,5 +1,7 @@
 .card {
-    padding: 5px 0px 7px 0px;
+    padding: 0px 0px 0px 0px;
+    border: 1px solid;
+    border-color: #d4d4d4
 }
 
 .card-title {
@@ -7,16 +9,18 @@
     margin-left: 10px;
     margin-top: 10px;
     margin-bottom: 6px;
+    color: #212122;
 }
 
 .card-subtitle {
     font-size: 9pt;
     margin-left: 10px;
     margin-top: 5px;
+    color: #212122;
 }
 
 .card-body{
-    padding: 5px 0px;
-    margin: 0px 5px 3px 5px;    
+    padding: 5px 5px;
+    margin: 0px 0px 0px 5px;
 }
 

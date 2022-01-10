@@ -51,10 +51,11 @@ controls = dbc.FormGroup(
             className='dropdown'
         ),
 
-        dbc.Card([html.H4('Note:', className='card-subtitle'),
-                  dbc.CardBody("The term 'Statement' used in this dashboard is short-form \
+        dbc.Card([dbc.CardHeader([html.H4('NOTE', className='card-subtitle')]),
+                  dbc.CardBody(["The term 'Statement' used in this dashboard is short-form \
                     for the selected sentence fragment prefaced by the statement: \n \
-                    'A husband is justified in hitting or beating his wife...'")])
+                    'A husband is justified in hitting or beating his wife...'"],
+                  style={'padding': '10px 10px'})]),
     ])
 
 dash_sidebar = html.Div(

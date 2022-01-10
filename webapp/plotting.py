@@ -4,6 +4,9 @@ import plotly.graph_objects as go
 
 margins = dict(l=1, b=10, r=1, t=7)
 
+fig_template = 'plotly_white'
+fig_bckg_col = 'rgb(248, 249, 250)'
+
 def missing_values_plot(continent_code='All', country_code='All'):
     filtered_data = q.geo_filter(continent_code=continent_code, country_code=country_code)
     
@@ -13,12 +16,14 @@ def missing_values_plot(continent_code='All', country_code='All'):
         missing_vals.Country.value_counts()[:11],
         orientation='h',
         height=300,
-        width=285
+        template=fig_template,
     )
     figure.update_layout(
         showlegend=False, 
         font=dict(size=9),
         margin=margins,
+        paper_bgcolor=fig_bckg_col,
+        plot_bgcolor=fig_bckg_col
     )
     figure.update_xaxes(title='Number of missing values', nticks=10)
     figure.update_yaxes(title='')
@@ -35,7 +40,8 @@ def survey_year_plot(continent_code='All', country_code='All'):
         hover_data=["Survey Year"],
         color = "date_bins",
         category_orders={"date_bins": ["2000 - 2004", "2005 - 2009", "2010 - 2014", "2015 - 2018"]},
-        height=300
+        height=300,
+        template=fig_template
     )
 
     figure.update_layout(
@@ -48,7 +54,9 @@ def survey_year_plot(continent_code='All', country_code='All'):
             y=0.97,
             xanchor="left",
             x=0.07
-        )
+        ),
+        paper_bgcolor=fig_bckg_col,
+        plot_bgcolor=fig_bckg_col
     )
 
     return figure
@@ -77,7 +85,8 @@ def statement_response_plot(continent_code='All', country_code='All', statement_
         locations="country_code",
         hover_name="Country",
         color="Value",
-        height=300
+        height=300,
+        template=fig_template
     )
 
     agreement_across_countries.update_layout(
@@ -88,7 +97,9 @@ def statement_response_plot(continent_code='All', country_code='All', statement_
             tickmode='array',
             tickvals=[i for i in range(0, 100, 5)],
             ticktext=['{x}%'.format(x=x) for x in range(0, 100, 5)]
-        )
+        ),
+        paper_bgcolor=fig_bckg_col,
+        plot_bgcolor=fig_bckg_col
     )
 
     return agreement_across_countries
@@ -109,6 +120,7 @@ by_demographic='Education', plot_toggle=False):
             facet_col="Demographics Response",
             opacity=opacity if opacity<=1 else 1,
             height=400,
+            template=fig_template
             )
         figure.update_yaxes(title=by_demographic)
     if plot_toggle is True:
@@ -120,9 +132,9 @@ by_demographic='Education', plot_toggle=False):
             facet_col="Gender",
             height=400,
             hover_data=['Country'],
+            template=fig_template
             )
     
-    #figure.for_each_annotation(lambda a: a.update(text=by_demographic + ' = ' + a.text.split("=")[-1]))
     figure.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
 
     for axis in figure.layout:
@@ -131,27 +143,52 @@ by_demographic='Education', plot_toggle=False):
         if type(figure.layout[axis]) == go.layout.YAxis:
             figure.layout[axis].title.text = ''
 
-    
-    figure.update_layout(
-        annotations = list(figure.layout.annotations) + 
-        [go.layout.Annotation(
-                x=0.5,
-                y=-0.13,
-                font=dict(
-                    size=12
-                ),
-                showarrow=False,
-                text="Percent Agreement",
-                xref="paper",
-                yref="paper"
-            )
-        ]
-    )
+    if plot_toggle is True:
+        figure.update_layout(
+            annotations = list(figure.layout.annotations) + 
+            [go.layout.Annotation(
+                    x=-0.06,
+                    y=0.5,
+                    font=dict(
+                        size=12
+                    ),
+                    textangle=-90,
+                    showarrow=False,
+                    text="Percent Agreement",
+                    xref="paper",
+                    yref="paper"
+                )
+            ]
+        )
+    else:
+        figure.update_layout(
+            annotations = list(figure.layout.annotations) + 
+            [go.layout.Annotation(
+                    x=0.5,
+                    y=-0.13,
+                    font=dict(
+                        size=12
+                    ),
+                    showarrow=False,
+                    text="Percent Agreement",
+                    xref="paper",
+                    yref="paper"
+                )
+            ]
+        )
 
     figure.update_layout(
         font=dict(size=9),
-        margin = dict(l=5, b=10, r=10, t=55)
-        )
+        margin = dict(l=5, b=10, r=10, t=55),
+        legend=dict(
+            yanchor="top",
+            y=1.06,
+            xanchor="left",
+            x=1
+        ),
+        paper_bgcolor=fig_bckg_col,
+        plot_bgcolor=fig_bckg_col
+    )
     
     figure.update_traces(
         hovertemplate="<br>".join([

@@ -8,6 +8,8 @@ from plotting import missing_values_plot,\
                     ques_gender_scatter_plot, \
                     data_table
 
+card_class = 'card bg-light'
+
 missing_val_plot = dcc.Graph(
         id = 'missing_values_plot', 
         figure = missing_values_plot()
@@ -58,23 +60,32 @@ summary_table_men = dash_table.DataTable(
     },
 )
 
-row_4 = dbc.Row([
+row_3 = dbc.Row([
     dbc.Col(
         dbc.Card([
-            html.H3('Percent of surveyed pop. that agrees with statement averaged over demographic and gender', className='card-title'),
-            html.H4('Statement: ... for at least one specific reason', id='statementtext_plot', className='card-subtitle'),
+            dbc.CardHeader([
+                html.H3('Percent surveyed pop. that agrees with statement avgd. over demographic and gender', className='card-title'),
+                html.H4('Statement: ... for at least one specific reason', id='statementtext_plot', className='card-subtitle'),
+            ]),
             dbc.CardBody([qr_plot])],
-            className='card'
+            className=card_class
             ), 
         style={'padding-right': '5px'},
         width=8
         ),
     dbc.Col(
         dbc.Card([
-            html.H3('Continental Summary - All continents', id='continenttext', className='card-title'),
-            html.H4('Statement: ... for at least one specific reason', id='statementtext_table', className='card-subtitle'),
-            dbc.CardBody([html.H5('Men'), summary_table_men, html.H5('Women'), summary_table_women])], 
-        className='card'
+            dbc.CardHeader([
+                html.H3('Continental Summary - All continents', id='continenttext', className='card-title'),
+                html.H4('Statement: ... for at least one specific reason', id='statementtext_table', className='card-subtitle'),
+            ]),
+            dbc.CardBody([
+                html.H5('Men'),
+                summary_table_men, 
+                html.H5('Women'), 
+                summary_table_women
+                ], style={'padding': '5px 5px'})], 
+        className=card_class
         ),
         style={'padding-left': '5px'},
         width=4)
@@ -82,42 +93,49 @@ row_4 = dbc.Row([
 
 row_2 = dbc.Row([
     dbc.Col(dbc.Card([
-            html.H3('Agreement as a function of demographic and gender', className='card-title'),
-            dbc.CardBody(gender_scatter)
+            dbc.CardHeader([
+                html.H3('Percent surveyed pop. that agrees with statements across gender and demographic', className='card-title'),
+                html.H4('Scatter - useful for visualising country-specific gender comparison. Box - useful for visualising continental/population trends.', className='card-subtitle'),
+                html.Div(dbc.Card([dbc.CardBody(
+                    daq.ToggleSwitch(
+                    id='plot-toggle-switch',
+                    label={'label': 'Plot type: Scatter / Box', 'style': {'font-size': "smaller"}},
+                    value=False,
+                    size=30,
+                    style={'margin': '0px', 'padding': '0px'}, # toggle style
+                ), style={'margin': '0px 0px', 'padding': '0px 0px'}) # card body style
+                ], style={'padding': '5px'}) # card style
+                , style={'float': 'right', 'margin-top': '-50px'}) # div style
+            ]),
+            dbc.CardBody([gender_scatter])
             ], 
-        className='card'
+        className=card_class
         ), 
-        width=12,
+        width=12
         )
-    ])
-
-row_3 = dbc.Row([
-    dbc.Col(daq.ToggleSwitch(
-        id='plot-toggle-switch',
-        label={'label': 'Plot type: Scatter / Box', 'style': {'font-size': "smaller"}},
-        value=False,
-        size=30,
-        style={'margin-top': '-450px', 'margin-left': '70%'})
-        ),
     ])
 
 row_1 = dbc.Row([
     dbc.Col(
         dbc.Card([
-            html.H3('Survey year', className='card-title'),
+            dbc.CardHeader([
+                html.H3('Survey year', className='card-title'),
+            ]),
             dbc.CardBody(survey_yr_plot)
         ],
-        className='card'
+        className=card_class
         ), 
     width=8,
     style={'padding-right': '5px'}
     ),
     dbc.Col(
         dbc.Card([
-            html.H3('Missing values in source data', className='card-title'),
+            dbc.CardHeader([
+                html.H3('Missing values in source data', className='card-title'),
+            ]),
             dbc.CardBody(missing_val_plot)
         ],
-        className='card'
+        className=card_class
         ),
         width=4,
         style={'padding-left': '5px'}
@@ -128,8 +146,7 @@ dash_content = html.Div(
     [
         row_1,
         row_2,
-        row_3,
-        row_4
+        row_3
     ],
     className="app-content"
 )
