@@ -10,3 +10,5 @@ dependencies:
 - pandas==1.4.0
 - plotly==5.3.1
 - pycountry_convert==0.7.2
+- pip:
+  - gunicorn
