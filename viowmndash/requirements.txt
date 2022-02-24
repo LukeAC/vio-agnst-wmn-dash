@@ -36,6 +36,7 @@ GDAL==3.4.1
 geographiclib @ file:///home/conda/feedstock_root/build_artifacts/geographiclib_1624386157733/work
 geopandas @ file:///home/conda/feedstock_root/build_artifacts/geopandas_1634376623017/work
 geopy @ file:///home/conda/feedstock_root/build_artifacts/geopy_1626114677070/work
+gunicorn
 idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1642433548627/work
 importlib-metadata @ file:///D:/bld/importlib-metadata_1642514280673/work
 importlib-resources @ file:///home/conda/feedstock_root/build_artifacts/importlib_resources_1635615662634/work
