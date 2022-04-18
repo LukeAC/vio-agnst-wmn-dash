@@ -96,7 +96,7 @@ def get_labels_continent_with_continent_code(continent_code="All"):
 
 def get_labels_statements(statement_id=None):
     """
-    Returns the formatted label of the statement passed as the argument
+    Returns the formatted labels of the statement passed as the argument
     """
     if statement_id != None:
         statements = dp.transformed_raw_data.loc[
@@ -107,7 +107,12 @@ def get_labels_statements(statement_id=None):
         ].values[0]
         return "Statement: {}".format(label)
     else:
-        return
+        return [
+            {"label": x[0], "value": x[1]}
+            for x in dp.transformed_raw_data.loc[:, ["Statement", "statement_id"]]
+            .drop_duplicates()
+            .values
+        ]
 
 
 def geo_filter(

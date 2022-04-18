@@ -18,14 +18,15 @@ def missing_values_plot(continent_code='All', country_code='All'):
         missing_vals.Country.value_counts()[:11],
         orientation='h',
         height=300,
-        template=fig_template,
+        template=fig_template
     )
     figure.update_layout(
         showlegend=False, 
         font=dict(size=9),
         margin=dict(l=1, b=10, r=10, t=7),
         paper_bgcolor=fig_bckg_col,
-        plot_bgcolor=fig_bckg_col
+        plot_bgcolor=fig_bckg_col,
+        dragmode=False
     )
     figure.update_xaxes(title='Number of missing values', nticks=10)
     figure.update_yaxes(title='')
