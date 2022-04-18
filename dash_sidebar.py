@@ -1,3 +1,4 @@
+## Imports
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 from src.queries import (
@@ -7,8 +8,8 @@ from src.queries import (
     get_labels_statements,
 )
 
-# the style arguments for the main content page.
 
+## Define sidebar controls
 controls = dbc.FormGroup(
     [
         html.P("Continent Selection", className="app-sidebar-dd-label"),
@@ -52,7 +53,7 @@ controls = dbc.FormGroup(
                     for the selected sentence fragment prefaced by the statement: \n \
                     'A husband is justified in hitting or beating his wife...'"
                     ],
-                    style={"padding": "10px 10px"},
+                    style={"padding": "3px 3px"},
                 ),
             ],
             className="text-white bg-info",
@@ -60,6 +61,8 @@ controls = dbc.FormGroup(
     ]
 )
 
+
+## Create sidebar
 dash_sidebar = html.Div(
     id="sidebar",
     children=[

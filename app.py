@@ -1,3 +1,4 @@
+## Imports
 from dash import Dash
 from dash.dependencies import Input, Output
 import dash_sidebar
@@ -19,13 +20,15 @@ from src.plotting import (
     data_table,
 )
 
+
+## Instantiate app object and define layout
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 app.title = "Violence Against Women Dashboard"
 
 app.layout = dbc.Container(
     fluid=True,
-    children=[  # html.Div(id = 'parent', children = [
+    children=[
         dash_sidebar.dash_sidebar,
         dash_content.dash_content,
     ],
@@ -33,6 +36,7 @@ app.layout = dbc.Container(
 )
 
 
+## Define app callbacks
 @app.callback(Output("country-dd", "options"), Input("continent-dd", "value"))
 def update_country_dd_options(continent_code):
     return get_labels_countries_in_continent_code(continent_code)
@@ -152,5 +156,6 @@ def update_continent_header(continent_value):
     return get_labels_continent_with_continent_code(continent_code=continent_value)
 
 
+## Run
 if __name__ == "__main__":
     app.run_server()

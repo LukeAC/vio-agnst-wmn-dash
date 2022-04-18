@@ -1,15 +1,17 @@
+## Imports
 import src.queries as q
 import plotly.express as px
 import plotly.graph_objects as go
 
+## Styling
 margins = dict(l=1, b=10, r=1, t=7)
-
 fig_template = 'plotly_white'
 fig_bckg_col = 'rgb(248, 249, 250)'
 
 def missing_values_plot(continent_code='All', country_code='All'):
+    """Takes a continent code and country code and returns bar chart object"""
+
     filtered_data = q.geo_filter(continent_code=continent_code, country_code=country_code)
-    
     missing_vals = filtered_data.loc[filtered_data['Value'].isna()]
 
     figure = px.bar(
@@ -32,6 +34,8 @@ def missing_values_plot(continent_code='All', country_code='All'):
 
 
 def survey_year_plot(continent_code='All', country_code='All'):
+    """Takes a continent code and country code and returns choropleth object"""
+
     filtered_data = q.geo_filter(continent_code=continent_code, country_code=country_code)
     figure = px.choropleth(
         filtered_data, 
@@ -65,7 +69,11 @@ def survey_year_plot(continent_code='All', country_code='All'):
 
 def statement_response_plot(continent_code='All', country_code='All', statement_id=1):
     """
-    A husband is justified in hitting or beating his wife
+    Takes a continent code, country code, and a statement id and returns choropleth object
+    
+    Statements are enumerated as follows:
+
+    A husband is justified in hitting or beating his wife...
         1 = '... for at least one specific reason'
         2 = '... if she argues with him'
         3 = '... if she burns the food'
@@ -107,6 +115,7 @@ def statement_response_plot(continent_code='All', country_code='All', statement_
 
 def ques_gender_scatter_plot(continent_code='All', country_code='All', 
 by_demographic='Education', plot_toggle=True):
+    """Takes a continent code,country code, and demographic group and returns boxplot or scatter plot object"""
 
     filtered_data = q.geo_filter(continent_code=continent_code, country_code=country_code)
     opacity = (1/len(filtered_data)) * 2000
@@ -201,7 +210,8 @@ by_demographic='Education', plot_toggle=True):
 
 def data_table(gender, continent_code='All', country_code='All', 
     by_demographic='Education', statement_id=1):
-    # gender must be 'F' or 'M'
+    """Takes a gender (must be 'F' or 'M'), continent code, country code, demographic group,
+    and statement id and returns choropleth object"""
     
     filtered_data = q.geo_filter(continent_code=continent_code, country_code=country_code)
     filtered_data = q.question_filter(filtered_data, statement_id)

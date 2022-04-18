@@ -1,3 +1,4 @@
+## Imports
 import pandas as pd
 import numpy as np
 from pycountry_convert import (
@@ -17,6 +18,7 @@ def load_data():
         "Timor-Leste": "East Timor",
     }
 
+    # provide continent names
     continent_names = {
         "AS": "Asia",
         "EU": "Europe",
@@ -25,15 +27,20 @@ def load_data():
         "AF": "Africa",
     }
 
-    # import data and format survey year
+    # import data
     raw_data = pd.read_csv("data/violence_data.csv")
     transformed_raw_data = raw_data.copy()
+
+    # format survey year
     transformed_raw_data["Survey Year"] = pd.to_datetime(
         raw_data["Survey Year"]
     ).dt.year
+
+    # rename column, just for simplicity
     transformed_raw_data["Statement"] = raw_data["Question"]
     transformed_raw_data.drop(columns=["Statement"])
 
+    # format country and continent data
     transformed_raw_data["clean_country"] = (
         transformed_raw_data["Country"].copy().replace(country_clean_dict)
     )
@@ -55,7 +62,7 @@ def load_data():
         transformed_raw_data["continent_code"].copy().map(continent_names)
     )
 
-    # Add Question IDs
+    # format question, statement, and demographic data
     statement_ids = {
         "... for at least one specific reason": 1,
         "... if she argues with him": 2,
@@ -91,6 +98,7 @@ def load_data():
         transformed_raw_data["Demographics Response"].copy().map(demo_ordinal)
     )
 
+    # bin survey years
     transformed_raw_data["date_bins"] = np.where(
         transformed_raw_data["Survey Year"] < 2005,
         "2000 - 2004",
