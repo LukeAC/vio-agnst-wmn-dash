@@ -53,7 +53,7 @@ controls = dbc.FormGroup(
                     for the selected sentence fragment prefaced by the statement: \n \
                     'A husband is justified in hitting or beating his wife...'"
                     ],
-                    style={"padding": "3px 3px"},
+                    style={"padding": "6px 6px"},
                 ),
             ],
             className="text-white bg-info",
