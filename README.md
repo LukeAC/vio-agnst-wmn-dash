@@ -26,4 +26,4 @@ or
 
 # Contributions
 
-Contributions are always welcome - I recommend forking this repository if you plan to prepare any improvements or alterations to the dashboard. Feel free to reach out to luke.a.collins@outlook.com with any questions you may have about this application.
+Contributions are always welcome - I recommend forking this repository if you plan to prepare any improvements or alterations to the dashboard. Feel free to reach out/create an issue with any questions you may have about this application.
